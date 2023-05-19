@@ -8,12 +8,21 @@ import SerchInput from '../../../component/SerchInput';
 import { dimensions, Mycolors } from '../../../utility/Mycolors';
 import { ImageSlider,ImageCarousel } from "react-native-image-slider-banner";
 import MyButtons from '../../../component/MyButtons';
+import MyAlert from '../../../component/MyAlert';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import Modal from 'react-native-modal';
-// import Toast from 'react-native-simple-toast'
+import Loader from '../../../WebApi/Loader';
+import LinearGradient from 'react-native-linear-gradient';
+import { baseUrl, login, shop_eat_business, requestPostApi, requestGetApi, connect_dating_profile,} from '../../../WebApi/Service'
+import { useSelector, useDispatch } from 'react-redux';
 import ViewMoreText from 'react-native-view-more-text';
 
 const DatingMoreInfo = (props) => {
+  const User = useSelector(state => state.user.user_details);
+  const [loading, setLoading] = useState(false)
+  const[profiledata,setProfileData]=useState('');
+  const [My_Alert, setMy_Alert] = useState(false)
+  const [alert_sms, setalert_sms] = useState('')
   const [searchValue,setsearchValue]=useState('')
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const myTextInput = useRef()
@@ -74,9 +83,26 @@ const DatingMoreInfo = (props) => {
 
   ])
   const multiSliderValuesChange = (values) => {setMultiSliderValue(values)}
-  useEffect(()=>{
 
- },[])
+  useEffect(()=>{
+    ProfilePage()
+  },[])
+  
+  const ProfilePage = async () => {
+    console.log('the res==>>ProfilePage')
+    setLoading(true)
+  
+    const { responseJson, err } = await requestGetApi(connect_dating_profile, '', 'GET',User.token)
+    setLoading(false)
+    console.log('the res==>>ProfilePage', responseJson)
+    if (responseJson.headers.success == 1) {
+      console.log('the res==>>ProfilePage', responseJson.body)
+      setProfileData(responseJson.body)
+    } else {
+      setalert_sms(err)
+      setMy_Alert(true)
+    }
+  } 
 
  const changeSaved = (id) => {
   const updataCopy = [...upData]
@@ -91,8 +117,9 @@ const DatingMoreInfo = (props) => {
 
   return(
     <SafeAreaView scrollEnabled={scrollEnabled} style={{backgroundColor:'#fff5f7', height:'100%'}}>
+
       <ScrollView>
-<View style={{width:'100%',alignSelf:'center'}}>
+<View style={{width:'100%', }}>
   <ImageSlider 
     //  localImg={true}
     data={[
@@ -104,11 +131,16 @@ const DatingMoreInfo = (props) => {
    // onClick={(item, index) => {alert('hello'+index)}}
     // autoPlay={true}
    // onItemChanged={(item) => console.log("item", item)}
-      indicatorContainerStyle={{}}
-      activeIndicatorStyle={{backgroundColor:'#FF4989'}}
-      caroselImageStyle={{height:400}}
+      
+      // activeIndicatorStyle={{backgroundColor:'#FF4989'}}
+      indicatorContainerStyle={{ top: -5 }}
+      caroselImageStyle={{resizeMode: 'cover',height:400}}
       closeIconColor="#fff"
-  />
+      headerStyle={{ padding: 0, backgroundColor: 'rgba(0,0,0, 0.6)', }}
+      showHeader
+      preview={false}
+     />
+
 </View>
 <TouchableOpacity onPress={()=>{props.navigation.goBack()}} style={{position:'absolute', top:40, left:20,}}>
   <Image source={require('../../../assets/images/dating-white-back-button.png')} style={{width:25, height:15}} resizeMode='contain'/>
@@ -118,13 +150,13 @@ const DatingMoreInfo = (props) => {
  <View style={{backgroundColor:'#fff5f7', padding:20}}>
   <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center',}}>
     <View>
-      <Text style={{fontSize:15, color:'#31313f', fontWeight:'bold',}}>Mary Burgees, 23</Text>
+      <Text style={{fontSize:15, color:'#31313f', fontWeight:'bold',}}>{profiledata.fullname}, {profiledata.age_preference}</Text>
       {/* <Text style={{fontSize:10, color:'#e10f51', marginTop:5}}>@marry</Text> */}
-      <Text style={{fontSize:10, color:'#4a4c52', marginTop:5}}>Professional model</Text>
+      <Text style={{fontSize:10, color:'#4a4c52', marginTop:5}}>{profiledata.job_title}</Text>
     </View>
-    <View style={{justifyContent:'center',alignItems:'center', width:40, height:40,borderRadius:10, backgroundColor:'#fff', shadowColor: '#0089CF',shadowOffset: {width: 0,height: 3},shadowRadius: 1,shadowOpacity: 0.1,elevation: 2}}>
+    <TouchableOpacity onPress={()=>{props.navigation.navigate('DatingChat')}} style={{justifyContent:'center',alignItems:'center', width:40, height:40,borderRadius:10, backgroundColor:'#fff', shadowColor: '#0089CF',shadowOffset: {width: 0,height: 3},shadowRadius: 1,shadowOpacity: 0.1,elevation: 2}}>
       <Image source={require('../../../assets/images/dating-home-header-right-image.png')} style={{width:20, height:20}}/>
-    </View>
+    </TouchableOpacity>
     
   </View>   
   <View style={{marginTop:20}}/>
@@ -144,27 +176,21 @@ const DatingMoreInfo = (props) => {
           numberOfLines={3}
           renderViewMore={(onPress)=>{
             return(
-              <Text onPress={onPress} style={{fontSize:10,color:'#dd2e44',textDecorationLine: "underline"}}>View more</Text>
+              <Text onPress={onPress} style={{fontSize:10,color:'#dd2e44',textDecorationLine: "underline",fontWeight:'500'}}>Read more</Text>
             )
           }}
           renderViewLess={(onPress)=>{
             return(
-              <Text onPress={onPress} style={{fontSize:10,color:'#dd2e44',textDecorationLine: "underline"}}>View less</Text>
+              <Text onPress={onPress} style={{fontSize:10,color:'#dd2e44',textDecorationLine: "underline",fontWeight:'500'}}>Read less</Text>
             )
            }}
           textStyle={{textAlign: 'left',width:'95%'}}
         >
-          <Text style={{fontSize:10, color:'#4a4c52'}}>
-          In publishing and graphic design, Lorem ipsum is a place-
-          holder text commonly used to demonstrate the visual form
-          of a document or a typeface without relying on meaningful
-          of a document or a typeface without relying on meaningful
-          content.
-          </Text>
+          <Text style={{fontSize:10, color:'#4a4c52'}}>{profiledata.about}</Text>
 </ViewMoreText>
 
 <View style={{marginTop:20}}>
-<Text style={{fontSize:12, color:'#31313f', fontWeight:'bold',marginBottom:10}}>Passions</Text>
+<Text style={{fontSize:12, color:'#31313f', fontWeight:'bold',marginBottom:10}}>Interests</Text>
 <FlatList
     data={passionValues}
     showsHorizontalScrollIndicator={false}
@@ -343,6 +369,8 @@ const DatingMoreInfo = (props) => {
            
             </View>
 </Modal>
+{loading ? <Loader /> : null}
+{My_Alert ? <MyAlert sms={alert_sms} okPress={() => { setMy_Alert(false) }} /> : null}
     </SafeAreaView>
      );
   }

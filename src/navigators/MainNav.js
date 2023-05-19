@@ -3,10 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DrawerNav from './DrawerNav';
 import AuthNav from './AuthNav'
 import Splash from './Splash';
-import {View ,StyleSheet,ActivityIndicator,SafeAreaView,ImageBackground ,Text, Platform} from 'react-native';
+import WeelStack from './WeelStack';
+import {View ,StyleSheet,ActivityIndicator,SafeAreaView,Alert,ImageBackground ,Text, Platform} from 'react-native';
 import {  useSelector, useDispatch } from 'react-redux';
 import { setLoading,saveUserResult} from '../redux/actions/user_action';
-// import messaging from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 import {setNotificationData,setNotify,setDeviceToken} from '../redux/actions/latLongAction';
 // import firestore from '@react-native-firebase/firestore'
 import SplashScreen from 'react-native-splash-screen'
@@ -21,21 +22,26 @@ import SplashScreen from 'react-native-splash-screen'
          setShowSplash(false);
         dispatch(saveUserResult(JSON.parse(user)))
     }
-    useEffect(()=> {  
-        // gettoken()
+    useEffect(()=> { 
+       
+      
+     //  messaging().setAutoInitEnabled(true)
+        gettoken()
+ //  getToken()
         const timeout = setTimeout(async () => {
             getAllValues();
               },3000);  
     },[]);
 
-    // const gettoken = () => {
-    //     messaging().getToken().then((token) => {
-    //         // adddata(token)
-    //       dispatch(setDeviceToken(token))
-    //       console.log('Device token is:==>>',token)
-    //    });
-    //     };
 
+    const gettoken = async () => {       
+        //  await messaging().registerDeviceForRemoteMessages();
+         const token = await messaging().getToken();
+         console.log('Token==>>',token);
+         dispatch(setDeviceToken(token))
+        };
+ 
+       
 
     if(showSplash){
         return <Splash /> 
@@ -45,7 +51,8 @@ import SplashScreen from 'react-native-splash-screen'
     return (
         isSignedIn ?
         (
-            <DrawerNav />
+            // <DrawerNav />
+            <WeelStack />
         )
     :
         (

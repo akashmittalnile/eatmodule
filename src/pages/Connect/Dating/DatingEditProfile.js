@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Image, Text, StyleSheet, SafeAreaView, TextInput, FlatList, Alert, TouchableOpacity, ScrollView, ImageBackground, Keyboard,PermissionsAndroid ,Platform} from 'react-native';
+import { View, Image, Text, StyleSheet, SafeAreaView, TextInput, FlatList, Alert, TouchableOpacity, ScrollView, ImageBackground, Keyboard, PermissionsAndroid, Platform } from 'react-native';
 import HomeHeaderRoundBottom from '../../../component/HomeHeaderRoundBottom';
 import SearchInput2 from '../../../component/SearchInput2';
 import SearchInputEnt from '../../../component/SearchInputEnt';
@@ -10,19 +10,34 @@ import MyButtons from '../../../component/MyButtons';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import Modal from 'react-native-modal';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import LinearGradient from 'react-native-linear-gradient'
+import MyAlert from '../../../component/MyAlert';
+
+import Loader from '../../../WebApi/Loader';
+import LinearGradient from 'react-native-linear-gradient';
+import { baseUrl, login, shop_eat_business, requestPostApi, requestGetApi, connect_dating_profile, connect_dating_editprofile, } from '../../../WebApi/Service'
+import { useSelector, useDispatch } from 'react-redux';
 
 const image1 = require('../../../assets/images/people-following-person.png')
 const onlinePersonImageWidth = 50
 const onlineDotWidth = 12
 const DatingEditProfile = (props) => {
+  const User = useSelector(state => state.user.user_details)
   const [searchValue, setsearchValue] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [My_Alert, setMy_Alert] = useState(false)
+  const [alert_sms, setalert_sms] = useState('')
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const myTextInput = useRef()
   const [userMessage, setUserMessage] = useState('')
   const [filepath, setfilepath] = useState(null)
   const [pick1, setpick] = useState('')
+  const [aboutme, setAboutMe] = useState('');
+
   const [multiSliderValue, setMultiSliderValue] = useState([18, 24])
+  // const [slidervalue,setSLiderValue]=useState('');
+  console.log('slidervalue====================================');
+  console.log(multiSliderValue[1]);
+  console.log('====================================slidervalue');
   const [showPassionsModal, setShowPassionsModal] = useState(false)
   const [showPassionsModal2, setShowPassionsModal2] = useState(false)
   const [showPassionsModal3, setShowPassionsModal3] = useState(false)
@@ -129,17 +144,20 @@ const DatingEditProfile = (props) => {
     setSelectedZodiac(index)
   }
 
-  const multiSliderValuesChange = (values) => { setMultiSliderValue(values) }
+  const multiSliderValuesChange = (values) => {
+    console.log("MultiSlider:::", values);
+    setMultiSliderValue(values)
+  }
 
 
   const openLibrary = async () => {
 
     let options = {
-      title: 'Image Picker', 
+      title: 'Image Picker',
       // mediaType: 'mixed',
-      storageOptions:{
-        skipBackup:true,
-        path:'images'
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
       },
       durationLimit: 30,
       title: 'Select Image/Video',
@@ -163,7 +181,7 @@ const DatingEditProfile = (props) => {
         var photo = {
           uri: image.assets[0].uri,
           type: image.assets[0].type,
-          name: image.assets[0].fileName 
+          name: image.assets[0].fileName
         };
         console.log("image", photo);
         setpick(photo)
@@ -238,7 +256,7 @@ const DatingEditProfile = (props) => {
         var photo = {
           uri: image.assets[0].uri,
           type: image.assets[0].type,
-          name: image.assets[0].fileName 
+          name: image.assets[0].fileName
         };
         console.log("imageCamera", photo);
         setpick(photo)
@@ -249,6 +267,57 @@ const DatingEditProfile = (props) => {
 
   }
 
+  const Editprofile = async (items) => {
+
+    setLoading(true)
+    var data = {
+      username: "Saurabh Kumar",
+      about: aboutme,
+      fullname: "Saurabh kumar",
+      dob: "1991-01-01",
+      age_preference: multiSliderValue[1],
+      activity_status: "Online",
+      intrest_in: "Female",
+      job_title: "Software Developer",
+      passions: [
+        {
+          attribute_type: "dating_passion",
+          attribute_code: "90s-kid",
+          attribute_value: "90s Kid"
+        },
+        {
+          attribute_type: "dating_passion",
+          attribute_code: "sneekers",
+          attribute_value: "Sneekers"
+        }
+      ],
+      languages: [
+        {
+          attribute_type: "dating_language",
+          attribute_code: "en",
+          attribute_value: "English"
+        },
+        {
+          attribute_type: "dating_language",
+          attribute_code: "hi",
+          attribute_value: "Hindi"
+        }
+      ]
+    }
+    const { responseJson, err } = await requestPostApi(connect_dating_editprofile, data, 'PUT', User.token)
+    setLoading(false)
+    console.log('the Editprofileres==>>', responseJson)
+    // if (responseJson.headers.success == 1) {
+    //   //  Toast.show(responseJson.headers.message)
+    //   Toast.show({ text1: responseJson.headers.message });
+    //   menuList(menutypevalue)
+    //   //  props.navigation.navigate('ShopCart')
+    // } else {
+    //   Toast.show({ text1: responseJson.headers.message });
+    //   // setalert_sms(err)
+    //   // setMy_Alert(true)
+    // }
+  }
 
   return (
     <SafeAreaView scrollEnabled={scrollEnabled} style={{ flex: 1, }}>
@@ -285,7 +354,7 @@ const DatingEditProfile = (props) => {
                   <Image source={require('../../../assets/images/dating-delete-photo-icon.png')} style={styles.deleteIcon} resizeMode='contain' />
                 </View>
               </View> */}
-              <TouchableOpacity onPress={()=>{requestCameraPermission()}} style={styles.plusIconSuperView}>
+              <TouchableOpacity onPress={() => { requestCameraPermission() }} style={styles.plusIconSuperView}>
                 <Image source={require('../../../assets/images/dating-upload-camera-icon.png')} style={{ width: 30, height: 30, }} resizeMode='contain' />
                 <View style={styles.plusIconView}>
                   <Image source={require('../../../assets/images/dating-upload-plus-icon.png')} style={styles.deleteIcon} resizeMode='contain' />
@@ -294,8 +363,9 @@ const DatingEditProfile = (props) => {
             </View>
             <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 20 }}>About me</Text>
             <TextInput
-              value={''}
-              onChangeText={(e) => { }}
+              value={aboutme}
+              textAlignVertical='top'
+              onChangeText={(e) => { setAboutMe(e) }}
               placeholder={'Type here.....'}
               placeholderTextColor="#bbbbbb"
               multiline={true}
@@ -346,6 +416,11 @@ const DatingEditProfile = (props) => {
                 values={[multiSliderValue[0], multiSliderValue[1]]}
                 // values={[multiSliderValue[0]]}
                 sliderLength={350}
+
+                // isMarkersSeparated={true}
+                // onValuesChangeStart={setSLiderValue}
+                // onValuesChangeFinish={setSLiderValue}
+
                 onValuesChange={multiSliderValuesChange}
                 min={18}
                 max={60}
@@ -493,7 +568,7 @@ const DatingEditProfile = (props) => {
             </View>
 
             <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Politics</Text>
-            <View  style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity onPress={() => { changePoliticsValue(0) }} style={[styles.smokingView, { backgroundColor: politicsValue === 0 ? '#fff1f6' : '#fff', borderColor: politicsValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
                 <Text style={styles.showMeText}>Apolotical</Text>
                 <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
@@ -514,9 +589,9 @@ const DatingEditProfile = (props) => {
                   <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                 </View>
               </TouchableOpacity>
-              
+
             </View>
-            <View  style={{ flexDirection: 'row', alignItems: 'center',marginTop:10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
               <TouchableOpacity onPress={() => { changePoliticsValue(3) }} style={[styles.showMeView, { backgroundColor: politicsValue === 3 ? '#fff1f6' : '#fff', borderColor: politicsValue === 3 ? '#ff3b7f' : '#e3d0d7' }]}>
                 <Text style={styles.showMeText}>Right</Text>
                 <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 3 ? '#ff3b7f' : '#e3d0d7' }]}>
@@ -537,7 +612,7 @@ const DatingEditProfile = (props) => {
                   <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                 </View>
               </TouchableOpacity>
-              
+
             </View>
             <View style={{ height: 50 }} />
 
@@ -718,9 +793,9 @@ const DatingEditProfile = (props) => {
                   keyExtractor={item => item.id}
                   renderItem={({ item, index }) => {
                     return (
-                      <TouchableOpacity onPress={() => { changeSelectedzodiac(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedZodiac ==item  ? '#fff1f6' : '#fff', borderColor: selectedZodiac==item ? '#ff3b7f' : '#e3d0d7' }]}>
+                      <TouchableOpacity onPress={() => { changeSelectedzodiac(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedZodiac == item ? '#fff1f6' : '#fff', borderColor: selectedZodiac == item ? '#ff3b7f' : '#e3d0d7' }]}>
                         <Text style={styles.showMeText}>{item}</Text>
-                        <View style={[styles.showMeImageView, { backgroundColor: selectedZodiac==item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <View style={[styles.showMeImageView, { backgroundColor: selectedZodiac == item ? '#ff3b7f' : '#e3d0d7' }]}>
                           <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                         </View>
                       </TouchableOpacity>
@@ -735,6 +810,8 @@ const DatingEditProfile = (props) => {
           </View>
         </Modal>
       </LinearGradient>
+      {loading ? <Loader /> : null}
+      {My_Alert ? <MyAlert sms={alert_sms} okPress={() => { setMy_Alert(false) }} /> : null}
     </SafeAreaView>
   );
 }
@@ -746,7 +823,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.2)',
     borderWidth: 0.5,
     backgroundColor: '#fff',
-    color: '#fff',
+    color: '#ff5e96',
     height: 100,
     borderRadius: 5,
     paddingHorizontal: 15,

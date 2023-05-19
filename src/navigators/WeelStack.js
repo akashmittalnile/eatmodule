@@ -92,8 +92,8 @@ const WeelStack=(props)=>{
            <Stack.Navigator
             screenOptions={{ headerShown:false,gestureEnabled: false}}
              >
-              {/* <Stack.Screen component = {ConnectDatingStack} name="DatingHome" /> */}
-              <Stack.Screen component = {ShopEatStack} name="ShopEat" />
+              <Stack.Screen component = {ConnectDatingStack} name="DatingHome" />
+              {/* <Stack.Screen component = {ShopEatStack} name="ShopEat" /> */}
             {/* <Stack.Screen component = {Weel} name="Weel" /> */}
 
             <Stack.Screen component = {Connect} name="Connect" />

@@ -99,6 +99,7 @@ const ShopEat = (props) => {
   const [remoteMessageData, setRemoteMessageData] = useState('');
 
   useEffect(() => {
+    // Alert.alert('Login Successfully!!!!')
     Geodummy()
     // GetLocation.getCurrentPosition({
     //   enableHighAccuracy: true,

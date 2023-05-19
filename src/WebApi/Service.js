@@ -42,10 +42,11 @@ export const  user_selectedAddress=`user/selectedAddress`;
 export const  selectAddress_id=`user/selectAddress/id/`; 
 export const  shop_eat_order_id=`shop/eat/order/id/`;
 
+export const  connect_dating_profile=`connect/dating/profile`;
+export const  connect_dating_editprofile=`connect/dating/profile`; 
 
+ 
 
-export const  driver_dashboard=`driver/dashboard`; 
-export const  driver_corporate_dashboard=`driver/corporate_dashboard`; 
 export const  booking_complete_ride=`booking/complete_ride`; 
 export const  driver_rides=`driver/rides`; 
 export const  driver_ride_details=`driver/ride_details?ride_id=`; 
