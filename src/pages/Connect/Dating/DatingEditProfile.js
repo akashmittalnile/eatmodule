@@ -14,7 +14,7 @@ import MyAlert from '../../../component/MyAlert';
 
 import Loader from '../../../WebApi/Loader';
 import LinearGradient from 'react-native-linear-gradient';
-import { baseUrl, login, shop_eat_business, requestPostApi, requestGetApi, connect_dating_profile, connect_dating_editprofile, } from '../../../WebApi/Service'
+import { baseUrl, login, shop_eat_business, requestPostApi, requestGetApi, connect_dating_profile, connect_dating_editprofile, common_master_attributes, } from '../../../WebApi/Service'
 import { useSelector, useDispatch } from 'react-redux';
 
 const image1 = require('../../../assets/images/people-following-person.png')
@@ -41,17 +41,32 @@ const DatingEditProfile = (props) => {
   const [showPassionsModal, setShowPassionsModal] = useState(false)
   const [showPassionsModal2, setShowPassionsModal2] = useState(false)
   const [showPassionsModal3, setShowPassionsModal3] = useState(false)
-  const [selectedPassions, setSelectedPassions] = useState(['90s Kid', 'Festival', 'Travelling'])
-  const [selectedLanguage, setSelectedLanguage] = useState(['Hindi', 'English', 'France'])
+
+  const [selectedPassions, setSelectedPassions] = useState([])
+   
+
+  const [selectedLanguage, setSelectedLanguage] = useState([])
+
   const [selectedZodiac, setSelectedZodiac] = useState('')
-  const [allPassions, setAllPassions] = useState(['90s Kid', 'Musicians', 'Maggi', 'Sneakers', 'Foodie', 'Yippie', 'Festival', 'Travelling', 'k-pop']);
-  const [allLanguage, setAllLanguage] = useState(['Hindi', 'English', 'Punjabi', 'Marathi', 'France', 'Sanskrit', 'Telugu', 'Spanish']);
+  // const [allPassions, setAllPassions] = useState(['90s Kid', 'Musicians', 'Maggi', 'Sneakers', 'Foodie', 'Yippie', 'Festival', 'Travelling', 'k-pop']);
+  // const [allLanguage, setAllLanguage] = useState(['Hindi', 'English', 'Punjabi', 'Marathi', 'France', 'Sanskrit', 'Telugu', 'Spanish']);
   const [allZodiac, setZodiac] = useState(['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Saggitarius', 'Capricorn', 'Aquarius', 'Pisces']);
-  const [showMeValue, setShowMeValue] = useState(0)
+  const [showMeValue, setShowMeValue] = useState(0);
+  const [showMeselect, setShowMeSelect] = useState('');
+
   const [smokingValue, setSmokingValue] = useState(0)
-  const [drinkingValue, setDrinkingValue] = useState(0)
-  const [kidsValue, setKidsValue] = useState(0)
-  const [politicsValue, setPoliticsValue] = useState(0)
+  const [smokingdata, setSmokingdata] = useState('');
+
+  const [drinkingValue, setDrinkingValue] = useState(0);
+  const [drinkingselect, setDrinkingSelect] = useState('');
+
+  const [kidsValue, setKidsValue] = useState(0);
+  const [kidsSelect, setKidsSelect] = useState('');
+
+  const [politicsValue, setPoliticsValue] = useState(0);
+  const [politicsselect, setPoliticsSelect] = useState('');
+
+  const [attribute, setAttribute] = useState([]);
   const [upData, setupData] = useState([
     {
       id: '1',
@@ -87,14 +102,28 @@ const DatingEditProfile = (props) => {
     if (showMeValue === index) {
       return
     }
+    if (showMeValue === 0) {
+      setShowMeSelect('Male')
+    } else if (showMeValue === 1) {
+      setShowMeSelect('Women')
+    } else  if (showMeValue === 2)  {
+      setShowMeSelect('Everyone')
+    }
 
     setShowMeValue(index)
   }
   const changeSmokingValue = (index) => {
+    console.log(smokingdata);
     if (smokingValue === index) {
       return
     }
-
+    if (smokingValue === 0) {
+      setSmokingdata('Yes')
+    } else if (smokingValue === 1) {
+      setSmokingdata('No')
+    } else  if (smokingValue === 2)  {
+      setSmokingdata('Occassionally')
+    }
     setSmokingValue(index)
   }
 
@@ -102,38 +131,66 @@ const DatingEditProfile = (props) => {
     if (drinkingValue === index) {
       return
     }
-
+    if (drinkingValue === 0) {
+      setDrinkingSelect('Yes')
+    } else if (drinkingValue === 1) {
+      setDrinkingSelect('No')
+    } else  if (drinkingValue === 2)  {
+      setDrinkingSelect('Occassionally')
+    }
     setDrinkingValue(index)
   }
   const changeKidsValue = (index) => {
     if (kidsValue === index) {
       return
     }
-
+    if (kidsValue === 0) {
+      setKidsSelect('Open to kids')
+    } else if (kidsValue === 1) {
+      setKidsSelect('Don`t want')
+    } else  if (kidsValue === 2)  {
+      setKidsSelect('Not sure yet')
+    }
     setKidsValue(index)
   }
   const changePoliticsValue = (index) => {
     if (politicsValue === index) {
       return
     }
+    if (politicsValue === 0) {
+      setPoliticsSelect('Apolotical')
+    } else if (politicsValue === 1) {
+      setPoliticsSelect('moderate')
+    } else  if (politicsValue === 2)  {
+      setPoliticsSelect('Left')
+    }else  if (politicsValue === 3)  {
+      setPoliticsSelect('Right')
+    }else  if (politicsValue === 4)  {
+      setPoliticsSelect('Communist')
+    }else  if (politicsValue === 5)  {
+      setPoliticsSelect('Socialist')
+    }
 
     setPoliticsValue(index)
   }
 
   const changeSelectedPassions = (value) => {
-    if (selectedPassions?.includes(value)) {
-      const updatedData = selectedPassions?.filter(el => el !== value)
+    console.log("changeSelectedPassions", value);
+    if (selectedPassions?.includes(value.name)) {
+      const updatedData = selectedPassions?.filter(el => el !== value.name)
       setSelectedPassions([...updatedData])
     } else {
-      setSelectedPassions([...selectedPassions, value])
+      setSelectedPassions([...selectedPassions, value.name])
+      
     }
   }
+
   const changeSelectedLanguage = (value) => {
-    if (selectedLanguage?.includes(value)) {
-      const updatedData = selectedLanguage?.filter(el => el !== value)
+    if (selectedLanguage?.includes(value.name)) {
+      const updatedData = selectedLanguage?.filter(el => el !== value.name)
       setSelectedLanguage([...updatedData])
     } else {
-      setSelectedLanguage([...selectedLanguage, value])
+      setSelectedLanguage([...selectedLanguage, value.name])
     }
   }
   const changeSelectedzodiac = (index) => {
@@ -267,18 +324,59 @@ const DatingEditProfile = (props) => {
 
   }
 
+  const GetAttributes = async (hob) => {
+    console.log("the res==>>GetAttributes", hob);
+    setLoading(true);
+
+    const { responseJson, err } = await requestGetApi(
+      common_master_attributes + hob,
+      "",
+      "GET",
+      User.token
+    );
+    setLoading(false);
+    console.log("the res==>>GetAttributes", responseJson);
+    if (responseJson.headers.success == 1) {
+      console.log("the res==>>GetAttributes", responseJson.body);
+      setAttribute(responseJson.body);
+    } else {
+      setalert_sms(err);
+      setMy_Alert(true);
+    }
+
+  };
+
   const Editprofile = async (items) => {
 
+    var paasionarray = []
+    var hobby = selectedPassions
+
+    // for (let i = 1; i <= hobby.length; i++) {
+      paasionarray.push({
+        attribute_type: hobby.master_type,
+        attribute_code: hobby.master_code,
+        attribute_value: hobby.name
+      })
+
+    // }
+    console.log("SAVE PROFILE DATA:",paasionarray);
+
     setLoading(true)
+
     var data = {
-      username: "Saurabh Kumar",
+      // username: "Saurabh Kumar",
       about: aboutme,
-      fullname: "Saurabh kumar",
-      dob: "1991-01-01",
+      // fullname: "Saurabh kumar",
+      // dob: "1991-01-01",
       age_preference: multiSliderValue[1],
-      activity_status: "Online",
-      intrest_in: "Female",
+      // activity_status: "Online",
+      intrest_in: showMeselect,
       job_title: "Software Developer",
+      smoking: smokingdata,
+      drinking: drinkingselect,
+      kids: kidsSelect,
+      zodiac: selectedZodiac,
+      "politics": politicsselect,
       passions: [
         {
           attribute_type: "dating_passion",
@@ -377,7 +475,7 @@ const DatingEditProfile = (props) => {
             <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Passions</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10 }}>
               <Text style={{ fontSize: 10, color: '#ff5e96', fontStyle: 'italic' }}>{selectedPassions?.join(', ')}</Text>
-              <TouchableOpacity onPress={() => setShowPassionsModal(true)}>
+              <TouchableOpacity onPress={() => { setShowPassionsModal(true), GetAttributes('dating_passion') }}>
                 <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 20, width: 20, }} resizeMode='contain' />
               </TouchableOpacity>
             </View>
@@ -479,7 +577,7 @@ const DatingEditProfile = (props) => {
             <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Language</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10 }}>
               <Text style={{ fontSize: 10, color: '#ff5e96', fontStyle: 'italic' }}>{selectedLanguage?.join(', ')}</Text>
-              <TouchableOpacity onPress={() => setShowPassionsModal2(true)}>
+              <TouchableOpacity onPress={() => { setShowPassionsModal2(true), GetAttributes('dating_language') }}>
                 <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 20, width: 20, }} resizeMode='contain' />
               </TouchableOpacity>
             </View>
@@ -544,7 +642,7 @@ const DatingEditProfile = (props) => {
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => { changeKidsValue(1) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: kidsValue === 1 ? '#fff1f6' : '#fff', borderColor: kidsValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Dont want</Text>
+                <Text style={styles.showMeText}>Don't want</Text>
                 <View style={[styles.showMeImageView, { backgroundColor: kidsValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
                   <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                 </View>
@@ -607,7 +705,7 @@ const DatingEditProfile = (props) => {
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => { changePoliticsValue(5) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: politicsValue === 5 ? '#fff1f6' : '#fff', borderColor: politicsValue === 5 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>socialist</Text>
+                <Text style={styles.showMeText}>Socialist</Text>
                 <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 5 ? '#ff3b7f' : '#e3d0d7' }]}>
                   <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                 </View>
@@ -616,7 +714,7 @@ const DatingEditProfile = (props) => {
             </View>
             <View style={{ height: 50 }} />
 
-            <MyButtons title="Save" height={60} width={'100%'} borderRadius={10} alignSelf="center" press={() => { }} marginHorizontal={20} fontSize={11}
+            <MyButtons title="Save" height={60} width={'100%'} borderRadius={10} alignSelf="center" press={() => {Editprofile() }} marginHorizontal={20} fontSize={11}
               titlecolor={Mycolors.BG_COLOR} hLinearColor={['#8d046e', '#e30f50']} />
 
             <View style={{ width: '100%', alignSelf: 'center', marginTop: 20, backgroundColor: '#F8F8F8' }}>
@@ -665,19 +763,19 @@ const DatingEditProfile = (props) => {
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
                   <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>Passions</Text>
-                  <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>{`${selectedPassions?.length}/${allPassions?.length}`}</Text>
+                  <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>{`${selectedPassions?.length}/${attribute?.length}`}</Text>
                 </View>
 
                 <FlatList
-                  data={allPassions}
+                  data={attribute}
                   showsHorizontalScrollIndicator={false}
                   numColumns={3}
                   keyExtractor={item => item.id}
                   renderItem={({ item, index }) => {
                     return (
-                      <TouchableOpacity onPress={() => { changeSelectedPassions(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedPassions?.includes(item) ? '#fff1f6' : '#fff', borderColor: selectedPassions?.includes(item) ? '#ff3b7f' : '#e3d0d7' }]}>
-                        <Text style={styles.showMeText}>{item}</Text>
-                        <View style={[styles.showMeImageView, { backgroundColor: selectedPassions?.includes(item) ? '#ff3b7f' : '#e3d0d7' }]}>
+                      <TouchableOpacity onPress={() => { changeSelectedPassions(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedPassions?.includes(item.name) ? '#fff1f6' : '#fff', borderColor: selectedPassions?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item.name}</Text>
+                        <View style={[styles.showMeImageView, { backgroundColor: selectedPassions?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
                           <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                         </View>
                       </TouchableOpacity>
@@ -724,19 +822,19 @@ const DatingEditProfile = (props) => {
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
                   <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>Language's</Text>
-                  <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>{`${selectedLanguage?.length}/${allLanguage?.length}`}</Text>
+                  <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>{`${selectedLanguage?.length}/${attribute?.length}`}</Text>
                 </View>
 
                 <FlatList
-                  data={allLanguage}
+                  data={attribute}
                   showsHorizontalScrollIndicator={false}
                   numColumns={3}
                   keyExtractor={item => item.id}
                   renderItem={({ item, index }) => {
                     return (
-                      <TouchableOpacity onPress={() => { changeSelectedLanguage(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedLanguage?.includes(item) ? '#fff1f6' : '#fff', borderColor: selectedLanguage?.includes(item) ? '#ff3b7f' : '#e3d0d7' }]}>
-                        <Text style={styles.showMeText}>{item}</Text>
-                        <View style={[styles.showMeImageView, { backgroundColor: selectedLanguage?.includes(item) ? '#ff3b7f' : '#e3d0d7' }]}>
+                      <TouchableOpacity onPress={() => { changeSelectedLanguage(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedLanguage?.includes(item.name) ? '#fff1f6' : '#fff', borderColor: selectedLanguage?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item.name}</Text>
+                        <View style={[styles.showMeImageView, { backgroundColor: selectedLanguage?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
                           <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                         </View>
                       </TouchableOpacity>
