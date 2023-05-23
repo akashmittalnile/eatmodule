@@ -11,7 +11,7 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import Modal from 'react-native-modal';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import MyAlert from '../../../component/MyAlert';
-
+import Toast from 'react-native-toast-message';
 import Loader from '../../../WebApi/Loader';
 import LinearGradient from 'react-native-linear-gradient';
 import { baseUrl, login, shop_eat_business, requestPostApi, requestGetApi, connect_dating_profile, connect_dating_editprofile, common_master_attributes, } from '../../../WebApi/Service'
@@ -25,7 +25,12 @@ const DatingEditProfile = (props) => {
   const [searchValue, setsearchValue] = useState('')
   const [loading, setLoading] = useState(false)
   const [My_Alert, setMy_Alert] = useState(false)
-  const [alert_sms, setalert_sms] = useState('')
+  const [alert_sms, setalert_sms] = useState('');
+  const [jobtitle, setJobTitle] = useState('');
+  const [jobcompany, setJobCompany] = useState('');
+  const [qualification, setQualification] = useState('');
+  const [collegename, setCollegename] = useState('');
+
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const myTextInput = useRef()
   const [userMessage, setUserMessage] = useState('')
@@ -38,35 +43,45 @@ const DatingEditProfile = (props) => {
   console.log('slidervalue====================================');
   console.log(multiSliderValue[1]);
   console.log('====================================slidervalue');
-  const [showPassionsModal, setShowPassionsModal] = useState(false)
-  const [showPassionsModal2, setShowPassionsModal2] = useState(false)
-  const [showPassionsModal3, setShowPassionsModal3] = useState(false)
+  const [showPassionsModal, setShowPassionsModal] = useState(false);
+  const [showPassionsModal2, setShowPassionsModal2] = useState(false);
+  const [showPassionsModal3, setShowPassionsModal3] = useState(false);
+  const [showPassionsModal4, setShowPassionsModal4] = useState(false);
+  const [showPassionsModal5, setShowPassionsModal5] = useState(false);
+  const [showPassionsModal6, setShowPassionsModal6] = useState(false);
+  const [showPassionsModal7, setShowPassionsModal7] = useState(false);
+  const [showPassionsModal8, setShowPassionsModal8] = useState(false);
+  const [showPassionsModal9, setShowPassionsModal9] = useState(false);
+  const [showPassionsModal10, setShowPassionsModal10] = useState(false);
+  const [showPassionsModal11, setShowPassionsModal11] = useState(false);
 
   const [selectedPassions, setSelectedPassions] = useState([])
-   
+
 
   const [selectedLanguage, setSelectedLanguage] = useState([])
 
   const [selectedZodiac, setSelectedZodiac] = useState('')
-  // const [allPassions, setAllPassions] = useState(['90s Kid', 'Musicians', 'Maggi', 'Sneakers', 'Foodie', 'Yippie', 'Festival', 'Travelling', 'k-pop']);
-  // const [allLanguage, setAllLanguage] = useState(['Hindi', 'English', 'Punjabi', 'Marathi', 'France', 'Sanskrit', 'Telugu', 'Spanish']);
+
   const [allZodiac, setZodiac] = useState(['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Saggitarius', 'Capricorn', 'Aquarius', 'Pisces']);
-  const [showMeValue, setShowMeValue] = useState(0);
+  const [genderValue, setGenderValue] = useState(['Men', 'Women', 'Transgender']);
+  const [genderselect, setGenderSelect] = useState('');
+  const [showMeValue, setShowMeValue] = useState(['Men', 'Women', 'Everyone']);
   const [showMeselect, setShowMeSelect] = useState('');
 
-  const [smokingValue, setSmokingValue] = useState(0)
+  const [smokingValue, setSmokingValue] = useState(['Yes', 'No', 'Occassionally']);
   const [smokingdata, setSmokingdata] = useState('');
 
-  const [drinkingValue, setDrinkingValue] = useState(0);
+  const [drinkingValue, setDrinkingValue] = useState(['Yes', 'No', 'Occassionally']);
   const [drinkingselect, setDrinkingSelect] = useState('');
 
-  const [kidsValue, setKidsValue] = useState(0);
+  const [kidsValue, setKidsValue] = useState(['Open to kids', 'Don`t want', 'Not sure yet']);
   const [kidsSelect, setKidsSelect] = useState('');
 
-  const [politicsValue, setPoliticsValue] = useState(0);
+  const [politicsValue, setPoliticsValue] = useState(['Apolotical', 'Moderate', 'Communist', 'Socialist']);
   const [politicsselect, setPoliticsSelect] = useState('');
 
   const [attribute, setAttribute] = useState([]);
+  const [attribute1, setAttribute1] = useState([]);
   const [upData, setupData] = useState([
     {
       id: '1',
@@ -98,109 +113,144 @@ const DatingEditProfile = (props) => {
     },
   ])
 
-  const changeShowMeValue = (index) => {
-    if (showMeValue === index) {
-      return
-    }
-    if (showMeValue === 0) {
-      setShowMeSelect('Male')
-    } else if (showMeValue === 1) {
-      setShowMeSelect('Women')
-    } else  if (showMeValue === 2)  {
-      setShowMeSelect('Everyone')
-    }
+  // const changeShowMeValue = (index) => {
+  //   if (showMeValue === index) {
+  //     return
+  //   }
+  //   if (showMeValue === 0) {
+  //     setShowMeSelect('Male')
+  //   } else if (showMeValue === 1) {
+  //     setShowMeSelect('Women')
+  //   } else if (showMeValue === 2) {
+  //     setShowMeSelect('Everyone')
+  //   }
 
-    setShowMeValue(index)
-  }
-  const changeSmokingValue = (index) => {
-    console.log(smokingdata);
-    if (smokingValue === index) {
-      return
-    }
-    if (smokingValue === 0) {
-      setSmokingdata('Yes')
-    } else if (smokingValue === 1) {
-      setSmokingdata('No')
-    } else  if (smokingValue === 2)  {
-      setSmokingdata('Occassionally')
-    }
-    setSmokingValue(index)
-  }
+  //   setShowMeValue(index)
+  // }
+  // const changeSmokingValue = (index) => {
+  //   console.log(smokingdata);
+  //   if (smokingValue === index) {
+  //     return
+  //   }
+  //   if (smokingValue === 0) {
+  //     setSmokingdata('Yes')
+  //   } else if (smokingValue === 1) {
+  //     setSmokingdata('No')
+  //   } else if (smokingValue === 2) {
+  //     setSmokingdata('Occassionally')
+  //   }
+  //   setSmokingValue(index)
+  // }
 
-  const changeDrinkingValue = (index) => {
-    if (drinkingValue === index) {
-      return
-    }
-    if (drinkingValue === 0) {
-      setDrinkingSelect('Yes')
-    } else if (drinkingValue === 1) {
-      setDrinkingSelect('No')
-    } else  if (drinkingValue === 2)  {
-      setDrinkingSelect('Occassionally')
-    }
-    setDrinkingValue(index)
-  }
-  const changeKidsValue = (index) => {
-    if (kidsValue === index) {
-      return
-    }
-    if (kidsValue === 0) {
-      setKidsSelect('Open to kids')
-    } else if (kidsValue === 1) {
-      setKidsSelect('Don`t want')
-    } else  if (kidsValue === 2)  {
-      setKidsSelect('Not sure yet')
-    }
-    setKidsValue(index)
-  }
-  const changePoliticsValue = (index) => {
-    if (politicsValue === index) {
-      return
-    }
-    if (politicsValue === 0) {
-      setPoliticsSelect('Apolotical')
-    } else if (politicsValue === 1) {
-      setPoliticsSelect('moderate')
-    } else  if (politicsValue === 2)  {
-      setPoliticsSelect('Left')
-    }else  if (politicsValue === 3)  {
-      setPoliticsSelect('Right')
-    }else  if (politicsValue === 4)  {
-      setPoliticsSelect('Communist')
-    }else  if (politicsValue === 5)  {
-      setPoliticsSelect('Socialist')
-    }
+  // const changeDrinkingValue = (index) => {
+  //   if (drinkingValue === index) {
+  //     return
+  //   }
+  //   if (drinkingValue === 0) {
+  //     setDrinkingSelect('Yes')
+  //   } else if (drinkingValue === 1) {
+  //     setDrinkingSelect('No')
+  //   } else if (drinkingValue === 2) {
+  //     setDrinkingSelect('Occassionally')
+  //   }
+  //   setDrinkingValue(index)
+  // }
+  // const changeKidsValue = (index) => {
+  //   if (kidsValue === index) {
+  //     return
+  //   }
+  //   if (kidsValue === 0) {
+  //     setKidsSelect('Open to kids')
+  //   } else if (kidsValue === 1) {
+  //     setKidsSelect('Don`t want')
+  //   } else if (kidsValue === 2) {
+  //     setKidsSelect('Not sure yet')
+  //   }
+  //   setKidsValue(index)
+  // }
+  // const changePoliticsValue = (index) => {
+  //   if (politicsValue === index) {
+  //     return
+  //   }
+  //   if (politicsValue === 0) {
+  //     setPoliticsSelect('Apolotical')
+  //   } else if (politicsValue === 1) {
+  //     setPoliticsSelect('moderate')
+  //   } else if (politicsValue === 2) {
+  //     setPoliticsSelect('Left')
+  //   } else if (politicsValue === 3) {
+  //     setPoliticsSelect('Right')
+  //   } else if (politicsValue === 4) {
+  //     setPoliticsSelect('Communist')
+  //   } else if (politicsValue === 5) {
+  //     setPoliticsSelect('Socialist')
+  //   }
 
-    setPoliticsValue(index)
-  }
+  //   setPoliticsValue(index)
+  // }
 
   const changeSelectedPassions = (value) => {
     console.log("changeSelectedPassions", value);
-    if (selectedPassions?.includes(value.name)) {
-      const updatedData = selectedPassions?.filter(el => el !== value.name)
+    if (selectedPassions?.includes(value.id)) {
+      const updatedData = selectedPassions?.filter(el => el !== value.id)
       setSelectedPassions([...updatedData])
     } else {
-      setSelectedPassions([...selectedPassions, value.name])
-      
+      setSelectedPassions([...selectedPassions, value.id])
+
     }
   }
 
   const changeSelectedLanguage = (value) => {
-    if (selectedLanguage?.includes(value.name)) {
-      const updatedData = selectedLanguage?.filter(el => el !== value.name)
+    if (selectedLanguage?.includes(value.id)) {
+      const updatedData = selectedLanguage?.filter(el => el !== value.id)
       setSelectedLanguage([...updatedData])
     } else {
-      setSelectedLanguage([...selectedLanguage, value.name])
+      setSelectedLanguage([...selectedLanguage, value.id])
     }
+  }
+
+  const changeSelectedShowme = (index) => {
+    if (showMeselect === index) {
+      return
+    }
+    setShowMeSelect(index)
+  }
+  const changeSelectedGender = (index) => {
+    if (genderselect === index) {
+      return
+    }
+    setGenderSelect(index)
+  }
+  const changeSelectedSmoking = (index) => {
+    if (smokingdata === index) {
+      return
+    }
+    setSmokingdata(index)
+  }
+  const changeSelectedDrinking = (index) => {
+    if (drinkingselect === index) {
+      return
+    }
+    setDrinkingSelect(index)
+  }
+  const changeSelectedKids = (index) => {
+    if (kidsSelect === index) {
+      return
+    }
+    setKidsSelect(index)
   }
   const changeSelectedzodiac = (index) => {
     if (selectedZodiac === index) {
       return
     }
-
     setSelectedZodiac(index)
   }
-
+  const changeSelectedPolitics = (index) => {
+    if (politicsselect === index) {
+      return
+    }
+    setPoliticsSelect(index)
+  }
   const multiSliderValuesChange = (values) => {
     console.log("MultiSlider:::", values);
     setMultiSliderValue(values)
@@ -324,21 +374,43 @@ const DatingEditProfile = (props) => {
 
   }
 
-  const GetAttributes = async (hob) => {
-    console.log("the res==>>GetAttributes", hob);
+  const GetPassionAttributes = async () => {
+    // console.log("the res==>>GetPassionAttributes", hob);
     setLoading(true);
 
     const { responseJson, err } = await requestGetApi(
-      common_master_attributes + hob,
+      common_master_attributes + 'dating_passion',
       "",
       "GET",
       User.token
     );
     setLoading(false);
-    console.log("the res==>>GetAttributes", responseJson);
+    console.log("the res==>>GetPassionAttributes", responseJson);
     if (responseJson.headers.success == 1) {
-      console.log("the res==>>GetAttributes", responseJson.body);
+      console.log("the res==>>GetPassionAttributes", responseJson.body);
       setAttribute(responseJson.body);
+
+    } else {
+      setalert_sms(err);
+      setMy_Alert(true);
+    }
+
+  };
+  const GetLanguageAttributes = async () => {
+    // console.log("the res==>>GetLanguageAttributes", hob);
+    setLoading(true);
+
+    const { responseJson, err } = await requestGetApi(
+      common_master_attributes + 'dating_language',
+      "",
+      "GET",
+      User.token
+    );
+    setLoading(false);
+    console.log("the res==>>GetLanguageAttributes", responseJson);
+    if (responseJson.headers.success == 1) {
+      console.log("the res==>>GetLanguageAttributes", responseJson.body);
+      setAttribute1(responseJson.body);
     } else {
       setalert_sms(err);
       setMy_Alert(true);
@@ -346,21 +418,13 @@ const DatingEditProfile = (props) => {
 
   };
 
-  const Editprofile = async (items) => {
+  const Editprofile = async () => {
+    if (smokingdata == '') {
+      Toast.show({ text1: 'Please select smoking or not' });
+    }
+    var passiondata = selectedPassions?.map(el => attribute.find(att => att.id == el)).map(el => { return { attribute_type: el.master_type, attribute_code: el.master_code, attribute_value: el.name } });
 
-    var paasionarray = []
-    var hobby = selectedPassions
-
-    // for (let i = 1; i <= hobby.length; i++) {
-      paasionarray.push({
-        attribute_type: hobby.master_type,
-        attribute_code: hobby.master_code,
-        attribute_value: hobby.name
-      })
-
-    // }
-    console.log("SAVE PROFILE DATA:",paasionarray);
-
+    var languagedata = selectedLanguage?.map(el => attribute1.find(att => att.id == el)).map(el => { return { attribute_type: el.master_type, attribute_code: el.master_code, attribute_value: el.name } });
     setLoading(true)
 
     var data = {
@@ -368,53 +432,37 @@ const DatingEditProfile = (props) => {
       about: aboutme,
       // fullname: "Saurabh kumar",
       // dob: "1991-01-01",
-      age_preference: multiSliderValue[1],
+      // age_preference: multiSliderValue[1],
       // activity_status: "Online",
-      intrest_in: showMeselect,
-      job_title: "Software Developer",
+      // intrest_in: showMeselect,
+      gender: "Male",
+      qualification: qualification,
+      university: collegename,
+      height: '5.4',
+      job_title: jobtitle,
+      job_company: jobcompany,
       smoking: smokingdata,
       drinking: drinkingselect,
       kids: kidsSelect,
       zodiac: selectedZodiac,
-      "politics": politicsselect,
-      passions: [
-        {
-          attribute_type: "dating_passion",
-          attribute_code: "90s-kid",
-          attribute_value: "90s Kid"
-        },
-        {
-          attribute_type: "dating_passion",
-          attribute_code: "sneekers",
-          attribute_value: "Sneekers"
-        }
-      ],
-      languages: [
-        {
-          attribute_type: "dating_language",
-          attribute_code: "en",
-          attribute_value: "English"
-        },
-        {
-          attribute_type: "dating_language",
-          attribute_code: "hi",
-          attribute_value: "Hindi"
-        }
-      ]
+      politics: politicsselect,
+      passions: passiondata,
+      languages: languagedata
     }
+    console.log("SAVEDATA:", data);
     const { responseJson, err } = await requestPostApi(connect_dating_editprofile, data, 'PUT', User.token)
     setLoading(false)
     console.log('the Editprofileres==>>', responseJson)
-    // if (responseJson.headers.success == 1) {
-    //   //  Toast.show(responseJson.headers.message)
-    //   Toast.show({ text1: responseJson.headers.message });
-    //   menuList(menutypevalue)
-    //   //  props.navigation.navigate('ShopCart')
-    // } else {
-    //   Toast.show({ text1: responseJson.headers.message });
-    //   // setalert_sms(err)
-    //   // setMy_Alert(true)
-    // }
+    if (responseJson.headers.success == 1) {
+      //  Toast.show(responseJson.headers.message)
+      Toast.show({ text1: responseJson.headers.message });
+      menuList(menutypevalue)
+      //  props.navigation.navigate('ShopCart')
+    } else {
+      Toast.show({ text1: responseJson.headers.message });
+      // setalert_sms(err)
+      // setMy_Alert(true)
+    }
   }
 
   return (
@@ -438,7 +486,7 @@ const DatingEditProfile = (props) => {
           </View>
           <View style={{ width: '90%', alignSelf: 'center', marginTop: 20 }}>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10 }}>Edit Profile Photo</Text>
+            <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10 }}>Edit Profile Photo</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View>
                 <Image source={require('../../../assets/images/dating-message-image.png')} style={{ width: 100, height: 100, borderRadius: 2 }} resizeMode='contain' />
@@ -459,55 +507,55 @@ const DatingEditProfile = (props) => {
                 </View>
               </TouchableOpacity>
             </View>
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 20 }}>About me</Text>
+            <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 20 }}>About me</Text>
             <TextInput
               value={aboutme}
               textAlignVertical='top'
               onChangeText={(e) => { setAboutMe(e) }}
               placeholder={'Type here.....'}
-              placeholderTextColor="#bbbbbb"
+              placeholderTextColor="#ff5e96"
               multiline={true}
               // maxLength={500}
               // keyboardType="number-pad"
               autoCapitalize='none'
+              fontStyle='italic'
               style={[styles.input]}
             />
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Passions</Text>
+            <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Passions</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10 }}>
-              <Text style={{ fontSize: 10, color: '#ff5e96', fontStyle: 'italic' }}>{selectedPassions?.join(', ')}</Text>
-              <TouchableOpacity onPress={() => { setShowPassionsModal(true), GetAttributes('dating_passion') }}>
+
+              <Text style={{ fontSize: 16, color: '#ff5e96', fontStyle: 'italic' }}>{selectedPassions != '' ? selectedPassions?.map(el => attribute.find(att => att.id === el)?.name).join(', ') : 'Select Passion'}</Text>
+              <TouchableOpacity onPress={() => { setShowPassionsModal(true), GetPassionAttributes() }}>
                 <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 20, width: 20, }} resizeMode='contain' />
               </TouchableOpacity>
             </View>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Show me</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { changeShowMeValue(0) }} style={[styles.showMeView, { backgroundColor: showMeValue === 0 ? '#fff1f6' : '#fff', borderColor: showMeValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Men</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: showMeValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
+            <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Language</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10 }}>
+              <Text style={{ fontSize: 16, color: '#ff5e96', fontStyle: 'italic' }}>{selectedLanguage != '' ? selectedLanguage?.map(el => attribute1.find(att => att.id === el)?.name).join(', ') : 'Select Language'}</Text>
+              <TouchableOpacity onPress={() => { setShowPassionsModal2(true), GetLanguageAttributes('dating_language') }}>
+                <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 20, width: 20, }} resizeMode='contain' />
               </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeShowMeValue(1) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: showMeValue === 1 ? '#fff1f6' : '#fff', borderColor: showMeValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Women</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: showMeValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeShowMeValue(2) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: showMeValue === 2 ? '#fff1f6' : '#fff', borderColor: showMeValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Everyone</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: showMeValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
             </View>
 
+            {/* <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Occupation</Text>
+            <View style={{ justifyContent: 'center', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10, height: 60, }}>
+
+              <TextInput
+                value={jobtitle}
+                onChangeText={(text) => {
+                  setJobTitle(text)
+                }}
+                placeholder=""
+                // placeholderTextColor={Mycolors.placeholdercolor}
+                style={{ color: '#ff5e96', fontSize: 14, height: 60, paddingLeft: -5, }}
+              />
+
+            </View> */}
+{/* 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, marginTop: 15 }}>
-              <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869' }}>Age preference</Text>
-              <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#ff3b7f' }}>{`${multiSliderValue[0]}-${multiSliderValue[1]}`}</Text>
+              <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869' }}>Age preference</Text>
+              <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#ff3b7f' }}>{`${multiSliderValue[0]}-${multiSliderValue[1]}`}</Text>
             </View>
             <View style={{ alignItems: 'center' }}>
               <MultiSlider
@@ -528,8 +576,8 @@ const DatingEditProfile = (props) => {
                 markerStyle={{
                   ...Platform.select({
                     ios: {
-                      height: 30,
-                      width: 30,
+                      height: 25,
+                      width: 25,
                       shadowColor: '#000000',
                       shadowOffset: {
                         width: 0,
@@ -538,30 +586,30 @@ const DatingEditProfile = (props) => {
                       shadowRadius: 1,
                       shadowOpacity: 0.1,
                       borderColor: '#f23476',
-                      borderWidth: 1
+                      borderWidth: 1, marginLeft: 16
                     },
                     android: {
-                      height: 30,
-                      width: 30,
+                      height: 25,
+                      width: 25,
                       borderRadius: 50,
                       backgroundColor: '#f23476',
                       borderColor: '#f23476',
-                      borderWidth: 1
+                      borderWidth: 1, marginLeft: 16
                     }
                   })
                 }}
                 pressedMarkerStyle={{
                   ...Platform.select({
                     android: {
-                      height: 30,
-                      width: 30,
+                      height: 25,
+                      width: 25,
                       borderRadius: 20,
                       backgroundColor: '#f23476'
                     }
                   })
                 }}
-                selectedStyle={{ backgroundColor: '#f23476' }}
-                unselectedStyle={{ backgroundColor: '#e3d0d7', borderColor: '#f23476', borderWidth: 0.5 }}
+                selectedStyle={{ backgroundColor: '#f23476', }}
+                unselectedStyle={{ backgroundColor: '#e3d0d7', borderColor: '#f23476', borderWidth: 0.5, }}
                 trackStyle={{
                   height: 5
                 }}
@@ -572,149 +620,138 @@ const DatingEditProfile = (props) => {
                   slipDisplacement: 40
                 }}
               />
+            </View> */}
+            <View style={{ width: '90%',marginTop:10 }}>
+              <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#3e5869', }}>My basics</Text>
             </View>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Language</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10 }}>
-              <Text style={{ fontSize: 10, color: '#ff5e96', fontStyle: 'italic' }}>{selectedLanguage?.join(', ')}</Text>
-              <TouchableOpacity onPress={() => { setShowPassionsModal2(true), GetAttributes('dating_language') }}>
-                <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 20, width: 20, }} resizeMode='contain' />
-              </TouchableOpacity>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+              <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/dating_workicon.png')} style={{ heigh: 20, width: 20, marginRight: 7 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869' }}>Work</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '60%', height: 60, alignItems: 'center', }}>
+                <Text numberOfLines={1} style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{jobtitle != '' ? jobtitle + ' at ' + jobcompany : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal9(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Smoking</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { changeSmokingValue(0) }} style={[styles.showMeView, { backgroundColor: smokingValue === 0 ? '#fff1f6' : '#fff', borderColor: smokingValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Yes</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: smokingValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeSmokingValue(1) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: smokingValue === 1 ? '#fff1f6' : '#fff', borderColor: smokingValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>No</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: smokingValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeSmokingValue(2) }} style={[styles.smokingView, { marginLeft: 10, backgroundColor: smokingValue === 2 ? '#fff1f6' : '#fff', borderColor: smokingValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Occassionally</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: smokingValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+              <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/education_icon.png')} style={{ heigh: 24, width: 20, marginRight: 7 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Education</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{qualification != '' ? qualification + ' at ' + collegename : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal10(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Drinking</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { changeDrinkingValue(0) }} style={[styles.showMeView, { backgroundColor: drinkingValue === 0 ? '#fff1f6' : '#fff', borderColor: drinkingValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Yes</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: drinkingValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeDrinkingValue(1) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: drinkingValue === 1 ? '#fff1f6' : '#fff', borderColor: drinkingValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>No</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: drinkingValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeDrinkingValue(2) }} style={[styles.smokingView, { marginLeft: 10, backgroundColor: drinkingValue === 2 ? '#fff1f6' : '#fff', borderColor: drinkingValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Occassionally</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: drinkingValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+              <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/body-type-short.png')} style={{ heigh: 80, width: 34, marginLeft: -7, top: -3 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Gender</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{genderselect != '' ? genderselect : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal11(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Kid's</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { changeKidsValue(0) }} style={[styles.smokingView, { backgroundColor: kidsValue === 0 ? '#fff1f6' : '#fff', borderColor: kidsValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Open to kids</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: kidsValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeKidsValue(1) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: kidsValue === 1 ? '#fff1f6' : '#fff', borderColor: kidsValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Don't want</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: kidsValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changeKidsValue(2) }} style={[styles.smokingView, { marginLeft: 10, backgroundColor: kidsValue === 2 ? '#fff1f6' : '#fff', borderColor: kidsValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Not sure yet</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: kidsValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
+            <View style={{ width: '90%',marginTop:10 }}>
+              <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#3e5869', }}>More about me</Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'gray', marginTop: 5 }}>Cover the thinks most people are curious about</Text>
             </View>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Zodiac</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10 }}>
-              <Text style={{ fontSize: 10, color: '#ff5e96', fontStyle: 'italic' }}>{selectedZodiac}</Text>
-              <TouchableOpacity onPress={() => setShowPassionsModal3(true)}>
-                <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 20, width: 20, }} resizeMode='contain' />
-              </TouchableOpacity>
+            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+              <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/body-type-short.png')} style={{ heigh: 80, width: 34, marginLeft: -7, top: -3 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Show me</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{showMeselect != '' ? showMeselect : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal7(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
+            </View> */}
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+            <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/no-smoking.png')} style={{ heigh: 24, width: 20, marginRight: 7 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Smoking</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{smokingdata != '' ? smokingdata : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal6(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <Text style={{ fontSize: 11.3, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Politics</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { changePoliticsValue(0) }} style={[styles.smokingView, { backgroundColor: politicsValue === 0 ? '#fff1f6' : '#fff', borderColor: politicsValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Apolotical</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 0 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => { changePoliticsValue(1) }} style={[styles.smokingView, { marginLeft: 10, backgroundColor: politicsValue === 1 ? '#fff1f6' : '#fff', borderColor: politicsValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Moderate</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 1 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changePoliticsValue(2) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: politicsValue === 2 ? '#fff1f6' : '#fff', borderColor: politicsValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Left</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 2 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+            <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/beer-mug.png')} style={{ heigh: 24, width: 20, marginRight: 7 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Drinking</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{drinkingselect != '' ? drinkingselect : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal5(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-              <TouchableOpacity onPress={() => { changePoliticsValue(3) }} style={[styles.showMeView, { backgroundColor: politicsValue === 3 ? '#fff1f6' : '#fff', borderColor: politicsValue === 3 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Right</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 3 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => { changePoliticsValue(4) }} style={[styles.smokingView, { marginLeft: 10, backgroundColor: politicsValue === 4 ? '#fff1f6' : '#fff', borderColor: politicsValue === 4 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Communist</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 4 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { changePoliticsValue(5) }} style={[styles.showMeView, { marginLeft: 10, backgroundColor: politicsValue === 5 ? '#fff1f6' : '#fff', borderColor: politicsValue === 5 ? '#ff3b7f' : '#e3d0d7' }]}>
-                <Text style={styles.showMeText}>Socialist</Text>
-                <View style={[styles.showMeImageView, { backgroundColor: politicsValue === 5 ? '#ff3b7f' : '#e3d0d7' }]}>
-                  <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                </View>
-              </TouchableOpacity>
-
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+            <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/icons-pacifier.png')} style={{ heigh: 24, width: 20, marginRight: 7 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Kid's</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{kidsSelect != '' ? kidsSelect : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal4(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
             </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+            <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/crystal-ball.png')} style={{ heigh: 24, width: 20, marginRight: 7 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Zodiac</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{selectedZodiac != '' ? selectedZodiac : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal3(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, borderRadius: 10, height: 50, overflow: 'hidden', alignItems: "center", width: '100%', alignSelf: 'center', marginTop: 0 }}>
+            <View style={{ width: '30%', height: 60, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+                <Image resizeMode='contain' source={require('../../../assets/icons-elections.png')} style={{ heigh: 24, width: 20, marginRight: 7 }} />
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', }}>Politics</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '50%', height: 60, alignItems: 'center', }}>
+                <Text style={{ fontSize: 14, color: '#ff5e96', fontStyle: 'italic', textAlign: 'center', marginRight: 8 }}>{politicsselect != '' ? politicsselect : 'Add'}</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal8(true)} >
+                  <Image source={require('../../../assets/images/dating-change-password-right-arrow.png')} style={{ height: 14, width: 14, }} resizeMode='contain' />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+
             <View style={{ height: 50 }} />
 
-            <MyButtons title="Save" height={60} width={'100%'} borderRadius={10} alignSelf="center" press={() => {Editprofile() }} marginHorizontal={20} fontSize={11}
+            <MyButtons title="Save" height={60} width={'100%'} borderRadius={10} alignSelf="center" press={() => { Editprofile() }} marginHorizontal={20} fontSize={11}
               titlecolor={Mycolors.BG_COLOR} hLinearColor={['#8d046e', '#e30f50']} />
 
             <View style={{ width: '100%', alignSelf: 'center', marginTop: 20, backgroundColor: '#F8F8F8' }}>
@@ -773,9 +810,9 @@ const DatingEditProfile = (props) => {
                   keyExtractor={item => item.id}
                   renderItem={({ item, index }) => {
                     return (
-                      <TouchableOpacity onPress={() => { changeSelectedPassions(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedPassions?.includes(item.name) ? '#fff1f6' : '#fff', borderColor: selectedPassions?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
+                      <TouchableOpacity onPress={() => { changeSelectedPassions(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedPassions?.includes(item.id) ? '#fff1f6' : '#fff', borderColor: selectedPassions?.includes(item.id) ? '#ff3b7f' : '#e3d0d7' }]}>
                         <Text style={styles.showMeText}>{item.name}</Text>
-                        <View style={[styles.showMeImageView, { backgroundColor: selectedPassions?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <View style={[styles.showMeImageView, { backgroundColor: selectedPassions?.includes(item.id) ? '#ff3b7f' : '#e3d0d7' }]}>
                           <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                         </View>
                       </TouchableOpacity>
@@ -822,19 +859,19 @@ const DatingEditProfile = (props) => {
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
                   <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>Language's</Text>
-                  <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>{`${selectedLanguage?.length}/${attribute?.length}`}</Text>
+                  <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>{`${selectedLanguage?.length}/${attribute1?.length}`}</Text>
                 </View>
 
                 <FlatList
-                  data={attribute}
+                  data={attribute1}
                   showsHorizontalScrollIndicator={false}
                   numColumns={3}
                   keyExtractor={item => item.id}
                   renderItem={({ item, index }) => {
                     return (
-                      <TouchableOpacity onPress={() => { changeSelectedLanguage(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedLanguage?.includes(item.name) ? '#fff1f6' : '#fff', borderColor: selectedLanguage?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
+                      <TouchableOpacity onPress={() => { changeSelectedLanguage(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedLanguage?.includes(item.id) ? '#fff1f6' : '#fff', borderColor: selectedLanguage?.includes(item.id) ? '#ff3b7f' : '#e3d0d7' }]}>
                         <Text style={styles.showMeText}>{item.name}</Text>
-                        <View style={[styles.showMeImageView, { backgroundColor: selectedLanguage?.includes(item.name) ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <View style={[styles.showMeImageView, { backgroundColor: selectedLanguage?.includes(item.id) ? '#ff3b7f' : '#e3d0d7' }]}>
                           <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
                         </View>
                       </TouchableOpacity>
@@ -864,25 +901,24 @@ const DatingEditProfile = (props) => {
           backdropColor='transparent'
           style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
         >
-          <View style={{ height: '50%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+          <View style={{ height: '47%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
             <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
-                <View style={{ flex: 1 }} />
-                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center' }}>Zodiac</Text>
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/crystal-ball.png')} style={{ height: 44, width: 44 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>What's your Zodiac sign?</Text>
                 <TouchableOpacity onPress={() => setShowPassionsModal3(false)} style={{ flex: 1 }}>
-                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center' }}>Done</Text>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center', fontSize: 14 }}>Done</Text>
                 </TouchableOpacity>
               </View>
 
-              <View style={{ width: '95%', alignSelf: 'center' }}>
-                <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 9 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
                   Select Zodiac that you would like to share.
-                </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
-                  {/* <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>Zodiac</Text> */}
-                  {/* <Text style={{ color: '#4a4c52', fontSize: 12, fontWeight: '500' }}>{`${selectedZodiac?.length}`}</Text> */}
-                </View>
+                </Text> */}
+
 
                 <FlatList
                   data={allZodiac}
@@ -893,9 +929,9 @@ const DatingEditProfile = (props) => {
                     return (
                       <TouchableOpacity onPress={() => { changeSelectedzodiac(item) }} style={[styles.showMeView, { width: '30%', marginHorizontal: index % 3 === 1 ? 10 : 0, marginBottom: 10, backgroundColor: selectedZodiac == item ? '#fff1f6' : '#fff', borderColor: selectedZodiac == item ? '#ff3b7f' : '#e3d0d7' }]}>
                         <Text style={styles.showMeText}>{item}</Text>
-                        <View style={[styles.showMeImageView, { backgroundColor: selectedZodiac == item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        {/* <View style={[styles.showMeImageView, { backgroundColor: selectedZodiac == item ? '#ff3b7f' : '#e3d0d7' }]}>
                           <Image source={require('../../../assets/images/dating-selected-arrow.png')} style={styles.showMeImage} resizeMode='contain' />
-                        </View>
+                        </View> */}
                       </TouchableOpacity>
                     )
                   }}
@@ -907,6 +943,496 @@ const DatingEditProfile = (props) => {
 
           </View>
         </Modal>
+        {/* ......Kid's select modal 4..... */}
+        <Modal
+          isVisible={showPassionsModal4}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal4(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal4(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '40%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/icons-pacifier.png')} style={{ height: 44, width: 44 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>What are your ideal plans for children?</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal4(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center', fontSize: 14 }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 9 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+
+                <FlatList
+
+                  data={kidsValue}
+                  showsHorizontalScrollIndicator={false}
+                  // numColumns={3}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity onPress={() => { changeSelectedKids(item) }} style={[styles.showMeView, { width: '100%', marginBottom: 10, backgroundColor: kidsSelect == item ? '#fff1f6' : '#fff', borderColor: kidsSelect == item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item}</Text>
+
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+        {/* ......Drinking select modal 5..... */}
+        <Modal
+          isVisible={showPassionsModal5}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal5(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal5(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '40%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/beer-mug.png')} style={{ height: 44, width: 44 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>Do you drink? </Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal5(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center', fontSize: 14 }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 9 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+
+
+                <FlatList
+
+                  data={drinkingValue}
+                  showsHorizontalScrollIndicator={false}
+                  // numColumns={3}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity onPress={() => { changeSelectedDrinking(item) }} style={[styles.showMeView, { width: '100%', marginBottom: 10, backgroundColor: drinkingselect == item ? '#fff1f6' : '#fff', borderColor: drinkingselect == item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item}</Text>
+
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+        {/* ......Smoking select modal 6..... */}
+        <Modal
+          isVisible={showPassionsModal6}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal6(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal6(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '40%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/no-smoking.png')} style={{ height: 40, width: 40 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>Do you smoke?</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal6(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center', fontSize: 14 }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 9 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 1, marginBottom: 10 }}>
+
+                </View> */}
+
+                <FlatList
+
+                  data={smokingValue}
+                  showsHorizontalScrollIndicator={false}
+                  // numColumns={3}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity onPress={() => { changeSelectedSmoking(item) }} style={[styles.showMeView, { width: '100%', marginBottom: 10, backgroundColor: smokingdata == item ? '#fff1f6' : '#fff', borderColor: smokingdata == item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item}</Text>
+
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+        {/* ......Show me select modal 7..... */}
+        <Modal
+          isVisible={showPassionsModal7}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal7(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal7(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '38%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/gender-equality.png')} style={{ height: 40, width: 40 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>What are you looking for?</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal7(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center' }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 9 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 1, marginBottom: 10 }}>
+
+                </View> */}
+
+                <FlatList
+
+                  data={showMeValue}
+                  showsHorizontalScrollIndicator={false}
+                  // numColumns={3}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity onPress={() => { changeSelectedShowme(item) }} style={[styles.showMeView, { width: '100%', marginBottom: 10, backgroundColor: showMeselect == item ? '#fff1f6' : '#fff', borderColor: showMeselect == item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item}</Text>
+
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+        {/* ......Politics select modal 8..... */}
+        <Modal
+          isVisible={showPassionsModal8}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal8(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal8(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '45%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/icons-elections.png')} style={{ height: 40, width: 40 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>What are your Political learnings?</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal8(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center' }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center',marginTop:6 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+                
+
+                <FlatList
+
+                  data={politicsValue}
+                  showsHorizontalScrollIndicator={false}
+                  // numColumns={3}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity onPress={() => { changeSelectedPolitics(item) }} style={[styles.showMeView, { width: '100%', marginBottom: 10, backgroundColor: politicsselect == item ? '#fff1f6' : '#fff', borderColor: politicsselect == item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item}</Text>
+                      
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+
+        {/* ......Work select modal 9..... */}
+        <Modal
+          isVisible={showPassionsModal9}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal9(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal9(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '45%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/dating_workicon.png')} style={{ height: 40, width: 40 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>Please specify your designation and company</Text>
+
+                <TouchableOpacity onPress={() => setShowPassionsModal9(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center' }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 9 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+
+                <View>
+                  <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 1 }}>Job title</Text>
+                  <View style={{ justifyContent: 'center', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10, height: 60, }}>
+
+                    <TextInput
+                      value={jobtitle}
+                      onChangeText={(text) => {
+                        setJobTitle(text)
+                      }}
+                      placeholder="Job title"
+                      placeholderTextColor='#ff5e96'
+                      style={{ color: '#ff5e96', fontSize: 14, height: 60, paddingLeft: -5, }}
+                    />
+
+                  </View>
+                  <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>Company name</Text>
+                  <View style={{ justifyContent: 'center', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10, height: 60, }}>
+
+                    <TextInput
+                      value={jobcompany}
+                      onChangeText={(text) => {
+                        setJobCompany(text)
+                      }}
+                      placeholder="Company name"
+                      placeholderTextColor='#ff5e96'
+                      style={{ color: '#ff5e96', fontSize: 14, height: 60, paddingLeft: -5, }}
+                    />
+
+                  </View>
+                </View>
+
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+
+        {/* ......education select modal 10..... */}
+        <Modal
+          isVisible={showPassionsModal10}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal10(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal10(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '45%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/dating_workicon.png')} style={{ height: 40, width: 40 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>Please specify your specialization and University name</Text>
+
+                <TouchableOpacity onPress={() => setShowPassionsModal10(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center' }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 0 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+
+                <View>
+                  <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 1 }}>Qualification</Text>
+                  <View style={{ justifyContent: 'center', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10, height: 60, }}>
+
+                    <TextInput
+                      value={qualification}
+                      onChangeText={(text) => {
+                        setQualification(text)
+                      }}
+                      placeholder="Qualification(PG,UG..)"
+                      placeholderTextColor='#ff5e96'
+                      style={{ color: '#ff5e96', fontSize: 14, height: 60, paddingLeft: -5, }}
+                    />
+
+                  </View>
+                  <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#3e5869', marginBottom: 10, marginTop: 15 }}>College/University</Text>
+                  <View style={{ justifyContent: 'center', backgroundColor: '#fff1f6', padding: 20, borderRadius: 10, height: 60, }}>
+
+                    <TextInput
+                      value={collegename}
+                      onChangeText={(text) => {
+                        setCollegename(text)
+                      }}
+                      placeholder="College/University name"
+                      placeholderTextColor='#ff5e96'
+                      style={{ color: '#ff5e96', fontSize: 14, height: 60, paddingLeft: -5, }}
+                    />
+
+                  </View>
+                </View>
+
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+        {/* ......Gender select modal 11..... */}
+        <Modal
+          isVisible={showPassionsModal11}
+          swipeDirection="down"
+          onBackdropPress={() => setShowPassionsModal11(false)}
+          onSwipeComplete={(e) => {
+            setShowPassionsModal11(false)
+          }}
+          scrollTo={() => { }}
+          scrollOffset={1}
+          propagateSwipe={true}
+          coverScreen={false}
+          backdropColor='transparent'
+          style={{ justifyContent: 'flex-end', margin: 0, backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <View style={{ height: '38%', backgroundColor: '#fff', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20 }}>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, marginTop: 10 }}>
+
+                <View style={{ flex: 1 }} >
+                  <Image source={require('../../../assets/gender-equality.png')} style={{ height: 40, width: 40 }} />
+                </View>
+                <Text style={{ flex: 4, color: Mycolors.Black, fontWeight: '500', textAlign: 'center', fontSize: 16 }}>Pick up which best describes you.</Text>
+                <TouchableOpacity onPress={() => setShowPassionsModal11(false)} style={{ flex: 1 }}>
+                  <Text style={{ color: '#FF3B7F', fontWeight: '500', textAlign: 'center' }}>Done</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ width: '95%', alignSelf: 'center', marginTop: 9 }}>
+                {/* <Text style={{ color: '#4a4c52', fontSize: 12 }}>
+                  Select Zodiac that you would like to share.
+                </Text> */}
+                {/* <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 1, marginBottom: 10 }}>
+
+                </View> */}
+
+                <FlatList
+
+                  data={genderValue}
+                  showsHorizontalScrollIndicator={false}
+                  // numColumns={3}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity onPress={() => { changeSelectedGender(item) }} style={[styles.showMeView, { width: '100%', marginBottom: 10, backgroundColor: genderselect == item ? '#fff1f6' : '#fff', borderColor: genderselect == item ? '#ff3b7f' : '#e3d0d7' }]}>
+                        <Text style={styles.showMeText}>{item}</Text>
+
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+
+              {/* <View style={{width:100,height:100}} /> */}
+            </ScrollView>
+
+          </View>
+        </Modal>
+
       </LinearGradient>
       {loading ? <Loader /> : null}
       {My_Alert ? <MyAlert sms={alert_sms} okPress={() => { setMy_Alert(false) }} /> : null}
@@ -917,7 +1443,7 @@ const styles = StyleSheet.create({
   input: {
     paddingLeft: 15,
     width: '100%',
-    fontSize: 13,
+    fontSize: 14,
     borderColor: 'rgba(0,0,0,0.2)',
     borderWidth: 0.5,
     backgroundColor: '#fff',
@@ -940,11 +1466,11 @@ const styles = StyleSheet.create({
   showMeView: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     width: '27%',
     padding: 10,
     // paddingHorizontal:15, 
-    borderRadius: 20,
+    borderRadius: 5,
     borderWidth: 0.5
   },
   smokingView: {
@@ -958,7 +1484,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5
   },
   showMeText: {
-    fontSize: 10,
+    fontSize: 14,
     color: '#4a4c52'
   },
   showMeImageView: {

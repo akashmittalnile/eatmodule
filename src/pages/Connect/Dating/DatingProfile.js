@@ -22,6 +22,7 @@ import { ImageSlider, ImageCarousel } from "react-native-image-slider-banner";
 import MyButtons from "../../../component/MyButtons";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import Modal from "react-native-modal";
+import Toast from 'react-native-toast-message';
 import MyAlert from "../../../component/MyAlert";
 import Loader from "../../../WebApi/Loader";
 import LinearGradient from "react-native-linear-gradient";
@@ -51,6 +52,8 @@ const DatingProfile = (props) => {
   const [loading, setLoading] = useState(false);
   const [My_Alert, setMy_Alert] = useState(false);
   const [alert_sms, setalert_sms] = useState("");
+  const [My_Alert2, setMy_Alert2] = useState(false)
+  const [alert_sms2, setalert_sms2] = useState('')
   const [searchValue, setsearchValue] = useState("");
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const myTextInput = useRef();
@@ -92,6 +95,10 @@ const DatingProfile = (props) => {
     ProfilePage();
   }, []);
 
+  const logoutDriver = async () => {
+    AsyncStorage.clear();
+    dispatch(onLogoutUser())
+  }
   const ProfilePage = async () => {
     console.log("the res==>>ProfilePage");
     setLoading(true);
@@ -274,7 +281,10 @@ dating-logout-image.png */}
                 >
                   <View style={{ alignItems: "center" }}>
                     <TouchableOpacity
-
+                      onPress={() => {
+                        setalert_sms2('Are you sure want to logout?')
+                        setMy_Alert2(true)
+                      }}
                       style={styles.buttonView}
                     >
                       <Image
@@ -368,6 +378,7 @@ dating-logout-image.png */}
           }}
         />
       ) : null}
+      {My_Alert2 ? <MyAlert sms={alert_sms2} sms2={'Logout'} okPress={() => { logoutDriver() }} canclePress={() => { setMy_Alert2(false) }} /> : null}
     </SafeAreaView>
   );
 };

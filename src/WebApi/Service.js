@@ -48,7 +48,7 @@ export const  common_master_attributes=`common/master-attributes?master_type=`;
  
 
 
-export const  driver_rides=`driver/rides`; 
+export const  connect_dating_location=`connect/dating/location`; 
 export const  driver_ride_details=`driver/ride_details?ride_id=`; 
 export const user_notifications = 'user/notifications'
 export const user_notification_change = 'user/notification_change'

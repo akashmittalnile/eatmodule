@@ -1,5 +1,5 @@
 import React, { useEffect,useState ,useRef} from 'react';
-import {View,Image,Text,StyleSheet,SafeAreaView,TextInput,FlatList,Alert,TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
+import {View,Image,Text,StyleSheet,SafeAreaView,TextInput,FlatList,Alert,TouchableOpacity, ScrollView, ImageBackground,Platform} from 'react-native';
 import HomeHeaderRoundBottom from '../../../component/HomeHeaderRoundBottom';
 import HomeHeader from '../../../component/HomeHeader';
 import SearchInput2 from '../../../component/SearchInput2';
@@ -10,12 +10,19 @@ import { ImageSlider,ImageCarousel } from "react-native-image-slider-banner";
 import MyButtons from '../../../component/MyButtons';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import Modal from 'react-native-modal';
-// import Toast from 'react-native-simple-toast'
+import Toast from 'react-native-toast-message';
+import Geocoder from "react-native-geocoding";
+import { GoogleApiKey } from '../../../WebApi/GoogleApiKey';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
+Geocoder.init(GoogleApiKey);
+const GOOGLE_MAPS_APIKEY = GoogleApiKey;
 const PeopleHome = (props) => {
   const [searchValue,setsearchValue]=useState('')
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const myTextInput = useRef()
+  const [googleAddress, setGoogleAddress] = useState('');
+  const [googleLatLng, setGoogleLatLng] = useState({});
   const [ageRangeSliderValue, setAgeRangeSliderValue] = useState([18, 60])
   const [distanceSliderValue, setDistanceSliderValue] = useState([10, 60])
   const [showFilterModal, setShowFilterModal] = useState(false)
@@ -98,6 +105,22 @@ const PeopleHome = (props) => {
     setFilterByStatus(value)
  }
 
+ function renderDescription(rowData) {
+  const title = rowData.structured_formatting.main_text;
+  const address = rowData.structured_formatting.secondary_text;
+  // console.log('renderDescription', address);
+  return (
+    <View style={{}}>
+      <Text style={{ color: 'gray' }}>
+        {title}
+      </Text>
+      <Text style={{ color: 'gray' }}>
+        {address}
+      </Text>
+    </View>
+  );
+}
+
   return(
     <SafeAreaView scrollEnabled={scrollEnabled} style={{backgroundColor:'#fff5f7'}}>
       <ScrollView>
@@ -118,10 +141,153 @@ const PeopleHome = (props) => {
   </View>
 
   <View style={{borderBottomColor: '#ffb0ba', borderBottomWidth: StyleSheet.hairlineWidth, marginTop:10}}/>  
-  <HomeHeader height={40}  paddingHorizontal={0}
+  {/* <HomeHeader height={40}  paddingHorizontal={0}
    press1={()=>{}} img1={require('../../../assets/images/dating-location-image.png')} img1width={11} img1height={15} 
    press2={()=>{}} title2={'New Yark USA'} fontWeight={'500'} img2height={20} right={dimensions.SCREEN_WIDTH*26/100} fontSize={10} color={'#e1194d'}
-   press3={()=>{setShowFilterModal(true)}} img3={require('../../../assets/images/dating-filter-image.png')} img3width={25} img3height={25} />  
+   press3={()=>{setShowFilterModal(true)}} img3={require('../../../assets/images/dating-filter-image.png')} img3width={25} img3height={25} />   */}
+   {/* <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          marginHorizontal: 10,
+          // backgroundColor: 'rgba(0,0,0,0.025)',
+          paddingHorizontal: 5,
+          // paddingVertical: 5,
+          // alignSelf: 'center',
+          // alignItems: 'center',
+          // backgroundColor: '#fff',
+          width: '94%',
+          borderRadius: 10,
+
+        }}>
+          <TouchableOpacity style={{ justifyContent: 'center', position: 'absolute', height: 55, left: 1 }}>
+            <Image source={require('../../../assets/images/dating-location-image.png')} style={{ width: 12, height: 15 }}></Image>
+          </TouchableOpacity>
+          <View style={{ width: '92%', justifyContent: 'center', alignItems: 'center', }}>
+            <GooglePlacesAutocomplete
+              // placeholder={addre.substring(0, 45)}
+              placeholder={'Noida, Uttar Pradesh, India'}
+              textInputProps={{
+                placeholderTextColor: '#000',
+                top: Platform.OS == 'ios' ? 15 : 0,
+                // width: '95%',
+                // placeholderTextColor: Colors.BLACK,
+                returnKeyType: 'search',
+                // onFocus: () => setShowPlacesList(true),
+                // onBlur: () => setShowPlacesList(false),
+                multiline: true,
+                numberOfLines: 3,
+                // onTouchStart: ()=>{downButtonHandler()}
+                height: 50,
+                color: '#000'
+              }}
+              renderRow={rowData => {
+                return (
+                  <View>
+                    {renderDescription(rowData)}
+                  </View>
+                )
+              }}
+              enablePoweredByContainer={false}
+              listViewDisplayed={'auto'}
+              styles={{
+                textInputContainer: {
+                  width: '100%',
+                  marginLeft: 0,
+                  // backgroundColor: 'grey',
+                },
+                description: {
+                  color: '#000',
+                  width: '74%',
+                  // fontWeight: '300'
+                },
+                poweredContainer: {
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  borderBottomRightRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  borderColor: '#C8C7CC',
+                  borderTopWidth: 0.5,
+                  color: '#000'
+                },
+                powered: {},
+                listView: {
+                  // color:'#000'
+                  borderWidth: 0.5,
+                  borderColor: 'gray',
+                  // borderRadius:10,
+                  overflow: 'hidden',
+                  paddingBottom: 10,
+                  padding: 3
+                },
+                row: {
+                  // backgroundColor: '#FFFFFF',
+                  paddingVertical: 10,
+                  height: 50,
+                  flexDirection: 'row',
+                },
+                separator: {
+                  height: 0.5,
+                  backgroundColor: '#C8C7CC',
+                  color: '#000',
+                  marginTop: 10
+                },
+                textInput: {
+                  backgroundColor: 'transparent',
+                  height: 40,
+                  borderRadius: 5,
+                  paddingVertical: 5,
+                  paddingHorizontal: 10,
+                  fontSize: 13,
+                  color: '#000',
+                  flex: 1,
+                  // paddingHorizontal: 5,
+                },
+              }}
+              onPress={(data, details = null) => {
+                console.log(data, details);
+                // 'details' is provided when fetchDetails = true
+                // setShowPlacesList(false)
+                // homePage(details.geometry.location.lat, details.geometry.location.lng)
+                // dispatch(setRestorentLocation({
+                //   latitude: details.geometry.location.lat,
+                //   longitude: details.geometry.location.lng,
+                // }))
+
+                setGoogleLatLng({
+                  lat: details.geometry.location.lat,
+                  lng: details.geometry.location.lng,
+                });
+                setGoogleAddress(data?.description);
+              }}
+              GooglePlacesDetailsQuery={{
+                fields: 'geometry',
+              }}
+              fetchDetails={true}
+              // currentLocation={true}
+              query={{
+                key: GOOGLE_MAPS_APIKEY,
+                language: 'en',
+              }}
+            />
+          </View>
+          <View style={{
+            height: 55, position: 'absolute', right: -10,
+            // borderTopRightRadius: 10,
+            // borderBottomRightRadius: 10,
+            // marginHorizontal: 8, top: 0,
+            // backgroundColor: '#ADC430',
+            paddingVertical: 5,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            // width: 40,
+            // borderTopRightRadius: 10, borderBottomRightRadius: 10
+          }}>
+            <TouchableOpacity onPress={() => { setShowFilterModal(true)}}>
+              <Image source={require('../../../assets/images/dating-filter-image.png')} style={{ width: 25, height: 25 }}></Image>
+            </TouchableOpacity>
+          </View>
+        </View> */}
   <View style={{borderBottomColor: '#ffb0ba', borderBottomWidth: StyleSheet.hairlineWidth}}/>  
 
   <View style={{}}>
